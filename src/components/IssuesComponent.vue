@@ -1,89 +1,96 @@
 <template>
   <div class="container flex-container">
-    <div class="flex-item issues" v-if="this.issues.length != 0">
-      <h1>Issues</h1>
-      <div class="issue" v-for="(issue, i) in this.issues" :key="i">
-        <div class="title">{{issue.title}}</div>
-        <div class="date">
-          {{issue.createdAt | date}}
-          <label
-            v-if="issue.createdAt != issue.updatedAt"
-          >, updated at {{issue.updatedAt}}</label>
+    <div class="flex-item issues">
+      <div v-if="this.issues.length != 0">
+        <h1>Issues</h1>
+        <div class="issue" v-for="(issue, i) in this.issues" :key="i">
+          <div class="title">{{issue.title}}</div>
+          <div class="date">
+            {{issue.createdAt | date}}
+            <label
+              v-if="issue.createdAt != issue.updatedAt"
+            >, updated at {{issue.updatedAt}}</label>
+          </div>
+          <vue-markdown class="body">{{issue.body}}</vue-markdown>
         </div>
-        <vue-markdown class="body">{{issue.body}}</vue-markdown>
-      </div>
-      <h1>Issues</h1>
-      <div class="issue" v-for="(issue, i) in this.issues" :key="i">
-        <div class="title">{{issue.title}}</div>
-        <div class="date">
-          {{issue.createdAt | date}}
-          <label
-            v-if="issue.createdAt != issue.updatedAt"
-          >, updated at {{issue.updatedAt}}</label>
-        </div>
-        <vue-markdown class="body">{{issue.body}}</vue-markdown>
-      </div>
-      <h1>Issues</h1>
-      <div class="issue" v-for="(issue, i) in this.issues" :key="i">
-        <div class="title">{{issue.title}}</div>
-        <div class="date">
-          {{issue.createdAt | date}}
-          <label
-            v-if="issue.createdAt != issue.updatedAt"
-          >, updated at {{issue.updatedAt}}</label>
-        </div>
-        <vue-markdown class="body">{{issue.body}}</vue-markdown>
       </div>
     </div>
     <div class="flex-item status sticky">
       <h1>Services Health</h1>
       <div>
         <div class="table-services">
-          <div class="table-item border-bottom border-right">
+          <div class="table-item border-bottom border-right relative">
             <div>
               Cloud
-              <question-mark/>
+              <question-mark
+                :tooltipHeader="'Cloud Message'"
+                :tooltipText="statuses.cloud.serviceMessage"
+              />
             </div>
             <div>
-              <tick-mark/>
+              <cross-mark v-if="statuses.cloud.serviceHealth == ServiceHealth.NOT_WORKING"/>
+              <tick-mark v-else-if="statuses.cloud.serviceHealth == ServiceHealth.WORKING"/>
+              <maintenance-mark
+                v-else-if="statuses.cloud.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
+              />
             </div>
           </div>
-          <div class="table-item border-bottom">
+          <div class="table-item border-bottom relative">
             <div>
               Cell counter
-              <question-mark/>
+              <question-mark
+                :tooltipHeader="'Cell counter Message'"
+                :tooltipText="statuses.cell_counter.serviceMessage"
+              />
             </div>
-
-            <tick-mark/>
+            <cross-mark v-if="statuses.cell_counter.serviceHealth == ServiceHealth.NOT_WORKING"/>
+            <tick-mark v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.WORKING"/>
+            <maintenance-mark
+              v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
+            />
           </div>
-          <div class="table-item border-bottom border-right">
+          <!-- <div class="table-item border-bottom border-right">
             <div>
               APIs
               <question-mark/>
             </div>
 
             <tick-mark/>
-          </div>
-          <div class="table-item border-bottom">
+          </div>-->
+          <div class="table-item border-right relative">
             <div>
               Omni
-              <question-mark/>
+              <question-mark
+                :tooltipHeader="'Omni Message'"
+                :tooltipText="statuses.omni.serviceMessage"
+              />
             </div>
-            <cross-mark/>
+            <cross-mark v-if="statuses.omni.serviceHealth == ServiceHealth.NOT_WORKING"/>
+            <tick-mark v-else-if="statuses.omni.serviceHealth == ServiceHealth.WORKING"/>
+            <maintenance-mark
+              v-else-if="statuses.omni.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
+            />
           </div>
-          <div class="table-item border-right">
+          <!-- <div class="table-item border-right">
             <div>
               Image analysis
               <question-mark/>
             </div>
             <maintenance-mark/>
-          </div>
-          <div class="table-item">
+          </div>-->
+          <div class="table-item relative">
             <div>
               Lux 2
-              <question-mark/>
+              <question-mark
+                :tooltipHeader="'Lux 2 Message'"
+                :tooltipText="statuses.lux_2.serviceMessage"
+              />
             </div>
-            <tick-mark/>
+            <cross-mark v-if="statuses.lux_2.serviceHealth == ServiceHealth.NOT_WORKING"/>
+            <tick-mark v-else-if="statuses.lux_2.serviceHealth == ServiceHealth.WORKING"/>
+            <maintenance-mark
+              v-else-if="statuses.lux_2.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
+            />
           </div>
         </div>
       </div>
@@ -108,11 +115,12 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import VueMarkdown from "vue-markdown";
-import Issue from "@/issue";
+import Issue from "@/classes/issue";
 import QuestionMark from "@/SVGs/QuestionMark.vue";
 import TickMark from "@/SVGs/TickMark.vue";
 import CrossMark from "@/SVGs/CrossMark.vue";
 import MaintenanceMark from "@/SVGs/MaintenanceMark.vue";
+import ServiceStatus, { ServiceHealth } from "@/classes/service-status";
 
 @Component({
   components: {
@@ -125,14 +133,17 @@ import MaintenanceMark from "@/SVGs/MaintenanceMark.vue";
 })
 export default class IssuesComponent extends Vue {
   @Prop({ default: [] }) private issues!: Issue[];
+  @Prop({ default: {} }) private statuses!: { [type: string]: ServiceStatus };
 
-  get formattedDate() {
-    return "computed ";
-  }
+  ServiceHealth = ServiceHealth;
 }
 </script>
 
 <style lang="scss">
+.relative {
+  position: relative;
+}
+
 .container {
   width: 100%;
   padding-right: 10px;
@@ -185,9 +196,9 @@ export default class IssuesComponent extends Vue {
 }
 
 .table-services {
-  height: 192px;
+  height: 128px;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr 1fr;
   border-top: 4px solid #1961a4;
   border-bottom: 1px solid #ffffff;
   border-radius: 10px 10px 5px 5px;
