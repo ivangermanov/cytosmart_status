@@ -1,7 +1,7 @@
 export default class ServiceStatus {
-  serviceType?: ServiceType;
-  serviceMessage?: string;
-  serviceHealth?: ServiceHealth;
+  public serviceType?: ServiceType;
+  public serviceMessage?: string;
+  public serviceHealth?: ServiceHealth;
 
   constructor(
     serviceType: ServiceType,
@@ -23,8 +23,8 @@ export enum ServiceHealth {
 export enum ServiceType {
   CLOUD = 0,
   CELL_COUNTER = 1,
-  //APIs = 2,
+  // APIs = 2,
   OMNI = 2,
-  //IMAGE_ANALYSIS = 4,
+  // IMAGE_ANALYSIS = 4,
   LUX_2 = 3
 }

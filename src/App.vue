@@ -3,7 +3,12 @@
     <div class="header">
       <div>Status</div>
     </div>
-    <issues-component :issues="issues" :statuses="statuses"></issues-component>
+    <issues-component
+      :issues="issues"
+      :statuses="statuses"
+      :showLoaderIssues="showLoaderIssues"
+      :showLoaderHealth="showLoaderHealth"
+    ></issues-component>
   </div>
 </template>
 
@@ -20,21 +25,20 @@ import ServiceStatus from "@/classes/service-status";
   }
 })
 export default class App extends Vue {
-  issues: Issue[] = [];
-  statuses: { [type: string]: ServiceStatus } = {
+  private issues: Issue[] = [];
+  private statuses: { [type: string]: ServiceStatus } = {
     cloud: Object as ServiceStatus,
     cell_counter: Object as ServiceStatus,
     omni: Object as ServiceStatus,
     lux_2: Object as ServiceStatus
   };
-  userPosting: string = "ivangermanov";
-
-  beforeMount() {
-    this.setIssues();
-    this.setStatuses();
-  }
+  private userPosting: string = "ivangermanov";
+  private showLoaderIssues: boolean = true;
+  private showLoaderHealth: boolean = true;
 
   created() {
+    this.setIssues();
+    this.setStatuses();
     setInterval(this.setIssues.bind(this), 300000);
     setInterval(this.setStatuses.bind(this), 300000);
   }
@@ -42,6 +46,7 @@ export default class App extends Vue {
   destroyed() {}
   // methods
   setIssues(): void {
+    this.showLoaderIssues = true;
     axios
       .get("https://api.github.com/repos/ivangermanov/cytosmart_test/issues")
       .then((r: AxiosResponse) => {
@@ -56,12 +61,14 @@ export default class App extends Vue {
             this.issues.push({ title, body, createdAt, updatedAt });
           }
         }
+        this.showLoaderIssues = false;
       })
       .catch(function(error) {
         console.log(error);
       });
   }
   setStatuses(): void {
+    this.showLoaderHealth = true;
     axios
       .all([
         axios.get(
@@ -105,6 +112,7 @@ export default class App extends Vue {
               lux2Res.data["serviceMessage"],
               lux2Res.data["serviceHealth"]
             );
+            this.showLoaderHealth = false;
           }
         )
       )

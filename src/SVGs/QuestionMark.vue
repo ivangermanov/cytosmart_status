@@ -32,8 +32,8 @@ import TooltipComponent from "@/components/TooltipComponent.vue";
   }
 })
 export default class QuestionMark extends Vue {
-  fill: string = "#FFF";
-  showToolTip: boolean = false;
+  private fill: string = "#FFF";
+  private showToolTip: boolean = false;
 
   @Prop() private tooltipHeader?: string;
   @Prop() private tooltipText?: string;

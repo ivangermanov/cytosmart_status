@@ -1,8 +1,8 @@
 export default class Issue {
-  title: string;
-  body: string;
-  createdAt: string;
-  updatedAt: string;
+  public title: string;
+  public body: string;
+  public createdAt: string;
+  public updatedAt: string;
 
   constructor(
     title: string,

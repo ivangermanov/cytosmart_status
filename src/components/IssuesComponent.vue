@@ -1,8 +1,9 @@
 <template>
   <div class="container flex-container">
-    <div class="flex-item issues">
-      <div v-if="this.issues.length != 0">
-        <h1>Issues</h1>
+    <div class="flex-item relative">
+      <h1>Issues</h1>
+      <loader-component :show="showLoaderIssues"></loader-component>
+      <div v-if="!showLoaderIssues">
         <div class="issue" v-for="(issue, i) in this.issues" :key="i">
           <div class="title">{{issue.title}}</div>
           <div class="date">
@@ -15,97 +16,100 @@
         </div>
       </div>
     </div>
-    <div class="flex-item status sticky">
+    <div class="flex-item status relative sticky">
       <h1>Services Health</h1>
-      <div>
-        <div class="table-services">
-          <div class="table-item border-bottom border-right relative">
-            <div>
-              Cloud
-              <question-mark
-                :tooltipHeader="'Cloud Message'"
-                :tooltipText="statuses.cloud.serviceMessage"
-              />
+      <loader-component :show="showLoaderHealth"></loader-component>
+      <div v-if="!showLoaderHealth">
+        <div>
+          <div class="table-services">
+            <div class="table-item border-bottom border-right relative">
+              <div>
+                Cloud
+                <question-mark
+                  :tooltipHeader="'Cloud Message'"
+                  :tooltipText="statuses.cloud.serviceMessage"
+                />
+              </div>
+              <div>
+                <cross-mark v-if="statuses.cloud.serviceHealth == ServiceHealth.NOT_WORKING"/>
+                <tick-mark v-else-if="statuses.cloud.serviceHealth == ServiceHealth.WORKING"/>
+                <maintenance-mark
+                  v-else-if="statuses.cloud.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
+                />
+              </div>
             </div>
-            <div>
-              <cross-mark v-if="statuses.cloud.serviceHealth == ServiceHealth.NOT_WORKING"/>
-              <tick-mark v-else-if="statuses.cloud.serviceHealth == ServiceHealth.WORKING"/>
+            <div class="table-item border-bottom relative">
+              <div>
+                Cell counter
+                <question-mark
+                  :tooltipHeader="'Cell counter Message'"
+                  :tooltipText="statuses.cell_counter.serviceMessage"
+                />
+              </div>
+              <cross-mark v-if="statuses.cell_counter.serviceHealth == ServiceHealth.NOT_WORKING"/>
+              <tick-mark v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.WORKING"/>
               <maintenance-mark
-                v-else-if="statuses.cloud.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
+                v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
               />
             </div>
-          </div>
-          <div class="table-item border-bottom relative">
-            <div>
-              Cell counter
-              <question-mark
-                :tooltipHeader="'Cell counter Message'"
-                :tooltipText="statuses.cell_counter.serviceMessage"
-              />
-            </div>
-            <cross-mark v-if="statuses.cell_counter.serviceHealth == ServiceHealth.NOT_WORKING"/>
-            <tick-mark v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.WORKING"/>
-            <maintenance-mark
-              v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
-            />
-          </div>
-          <!-- <div class="table-item border-bottom border-right">
+            <!-- <div class="table-item border-bottom border-right">
             <div>
               APIs
               <question-mark/>
             </div>
 
             <tick-mark/>
-          </div>-->
-          <div class="table-item border-right relative">
-            <div>
-              Omni
-              <question-mark
-                :tooltipHeader="'Omni Message'"
-                :tooltipText="statuses.omni.serviceMessage"
+            </div>-->
+            <div class="table-item border-right relative">
+              <div>
+                Omni
+                <question-mark
+                  :tooltipHeader="'Omni Message'"
+                  :tooltipText="statuses.omni.serviceMessage"
+                />
+              </div>
+              <cross-mark v-if="statuses.omni.serviceHealth == ServiceHealth.NOT_WORKING"/>
+              <tick-mark v-else-if="statuses.omni.serviceHealth == ServiceHealth.WORKING"/>
+              <maintenance-mark
+                v-else-if="statuses.omni.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
               />
             </div>
-            <cross-mark v-if="statuses.omni.serviceHealth == ServiceHealth.NOT_WORKING"/>
-            <tick-mark v-else-if="statuses.omni.serviceHealth == ServiceHealth.WORKING"/>
-            <maintenance-mark
-              v-else-if="statuses.omni.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
-            />
-          </div>
-          <!-- <div class="table-item border-right">
+            <!-- <div class="table-item border-right">
             <div>
               Image analysis
               <question-mark/>
             </div>
             <maintenance-mark/>
-          </div>-->
-          <div class="table-item relative">
-            <div>
-              Lux 2
-              <question-mark
-                :tooltipHeader="'Lux 2 Message'"
-                :tooltipText="statuses.lux_2.serviceMessage"
+            </div>-->
+            <div class="table-item relative">
+              <div>
+                Lux 2
+                <question-mark
+                  :tooltipHeader="'Lux 2 Message'"
+                  :tooltipText="statuses.lux_2.serviceMessage"
+                />
+              </div>
+              <cross-mark v-if="statuses.lux_2.serviceHealth == ServiceHealth.NOT_WORKING"/>
+              <tick-mark v-else-if="statuses.lux_2.serviceHealth == ServiceHealth.WORKING"/>
+              <maintenance-mark
+                v-else-if="statuses.lux_2.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
               />
             </div>
-            <cross-mark v-if="statuses.lux_2.serviceHealth == ServiceHealth.NOT_WORKING"/>
-            <tick-mark v-else-if="statuses.lux_2.serviceHealth == ServiceHealth.WORKING"/>
-            <maintenance-mark
-              v-else-if="statuses.lux_2.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
-            />
           </div>
         </div>
-      </div>
-      <div class="services-legend">
-        <div class="services-legend-item">
-          <tick-mark style="margin-right: 0.5rem"/>
-          <div>Working properly</div>
-        </div>
-        <div class="services-legend-item">
-          <cross-mark style="margin-right: 0.5rem"/>
-          <div>Not working</div>
-        </div>
-        <div class="services-legend-item">
-          <maintenance-mark style="margin-right: 0.5rem"/>
-          <div>Under maintenance</div>
+        <div class="services-legend">
+          <div class="services-legend-item">
+            <tick-mark style="margin-right: 0.5rem"/>
+            <div>Working properly</div>
+          </div>
+          <div class="services-legend-item">
+            <cross-mark style="margin-right: 0.5rem"/>
+            <div>Not working</div>
+          </div>
+          <div class="services-legend-item">
+            <maintenance-mark style="margin-right: 0.5rem"/>
+            <div>Under maintenance</div>
+          </div>
         </div>
       </div>
     </div>
@@ -114,6 +118,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import LoaderComponent from "@/components/LoaderComponent.vue";
 import VueMarkdown from "vue-markdown";
 import Issue from "@/classes/issue";
 import QuestionMark from "@/SVGs/QuestionMark.vue";
@@ -124,6 +129,7 @@ import ServiceStatus, { ServiceHealth } from "@/classes/service-status";
 
 @Component({
   components: {
+    LoaderComponent,
     VueMarkdown,
     QuestionMark,
     TickMark,
@@ -134,8 +140,10 @@ import ServiceStatus, { ServiceHealth } from "@/classes/service-status";
 export default class IssuesComponent extends Vue {
   @Prop({ default: [] }) private issues!: Issue[];
   @Prop({ default: {} }) private statuses!: { [type: string]: ServiceStatus };
+  @Prop({ default: true }) private showLoaderIssues = true;
+  @Prop({ default: true }) private showLoaderHealth = true;
 
-  ServiceHealth = ServiceHealth;
+  private ServiceHealth = ServiceHealth;
 }
 </script>
 

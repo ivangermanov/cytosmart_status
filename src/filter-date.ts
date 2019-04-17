@@ -1,5 +1,5 @@
 export default function(d: string) {
-  var options = {
+  const options = {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -9,4 +9,3 @@ export default function(d: string) {
   };
   return new Date(d).toLocaleString("en-gb", options);
 }
-//5th April 2019 at 12:00
