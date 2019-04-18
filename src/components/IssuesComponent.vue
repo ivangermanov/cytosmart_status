@@ -9,8 +9,9 @@
           <div class="date">
             {{issue.createdAt | date}}
             <label
+              class="updated"
               v-if="issue.createdAt != issue.updatedAt"
-            >, updated at {{issue.updatedAt}}</label>
+            >, updated at {{issue.updatedAt | date}}</label>
           </div>
           <vue-markdown class="body">{{issue.body}}</vue-markdown>
         </div>
@@ -26,6 +27,7 @@
               <div>
                 Cloud
                 <question-mark
+                  v-show="statuses.cloud.serviceMessage != null"
                   :tooltipHeader="'Cloud Message'"
                   :tooltipText="statuses.cloud.serviceMessage"
                 />
@@ -36,12 +38,14 @@
                 <maintenance-mark
                   v-else-if="statuses.cloud.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
                 />
+                <warning-mark v-else-if="statuses.cloud.serviceHealth == ServiceHealth.WARNING"/>
               </div>
             </div>
             <div class="table-item border-bottom relative">
               <div>
                 Cell counter
                 <question-mark
+                  v-show="statuses.cell_counter.serviceMessage != null"
                   :tooltipHeader="'Cell counter Message'"
                   :tooltipText="statuses.cell_counter.serviceMessage"
                 />
@@ -50,6 +54,9 @@
               <tick-mark v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.WORKING"/>
               <maintenance-mark
                 v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
+              />
+              <warning-mark
+                v-else-if="statuses.cell_counter.serviceHealth == ServiceHealth.WARNING"
               />
             </div>
             <!-- <div class="table-item border-bottom border-right">
@@ -64,6 +71,7 @@
               <div>
                 Omni
                 <question-mark
+                  v-show="statuses.omni.serviceMessage != null"
                   :tooltipHeader="'Omni Message'"
                   :tooltipText="statuses.omni.serviceMessage"
                 />
@@ -73,6 +81,7 @@
               <maintenance-mark
                 v-else-if="statuses.omni.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
               />
+              <warning-mark v-else-if="statuses.omni.serviceHealth == ServiceHealth.WARNING"/>
             </div>
             <!-- <div class="table-item border-right">
             <div>
@@ -85,6 +94,7 @@
               <div>
                 Lux 2
                 <question-mark
+                  v-show="statuses.lux_2.serviceMessage != null"
                   :tooltipHeader="'Lux 2 Message'"
                   :tooltipText="statuses.lux_2.serviceMessage"
                 />
@@ -94,6 +104,7 @@
               <maintenance-mark
                 v-else-if="statuses.lux_2.serviceHealth == ServiceHealth.UNDER_MAINTENANCE"
               />
+              <warning-mark v-else-if="statuses.lux_2.serviceHealth == ServiceHealth.WARNING"/>
             </div>
           </div>
         </div>
@@ -110,6 +121,10 @@
             <maintenance-mark style="margin-right: 0.5rem"/>
             <div>Under maintenance</div>
           </div>
+          <div class="services-legend-item">
+            <warning-mark style="margin-right: 0.5rem"/>
+            <div>Warning</div>
+          </div>
         </div>
       </div>
     </div>
@@ -125,6 +140,7 @@ import QuestionMark from "@/SVGs/QuestionMark.vue";
 import TickMark from "@/SVGs/TickMark.vue";
 import CrossMark from "@/SVGs/CrossMark.vue";
 import MaintenanceMark from "@/SVGs/MaintenanceMark.vue";
+import WarningMark from "@/SVGs/WarningMark.vue";
 import ServiceStatus, { ServiceHealth } from "@/classes/service-status";
 
 @Component({
@@ -134,7 +150,8 @@ import ServiceStatus, { ServiceHealth } from "@/classes/service-status";
     QuestionMark,
     TickMark,
     CrossMark,
-    MaintenanceMark
+    MaintenanceMark,
+    WarningMark
   }
 })
 export default class IssuesComponent extends Vue {
@@ -250,6 +267,10 @@ export default class IssuesComponent extends Vue {
 
 .border-bottom {
   border-bottom: 1px solid #f0f4f8;
+}
+
+.updated {
+  font-weight: bold;
 }
 
 @media (min-width: 1200px) {
