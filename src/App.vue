@@ -32,7 +32,7 @@ export default class App extends Vue {
     omni: Object as ServiceStatus,
     lux_2: Object as ServiceStatus
   };
-  private userPosting: string = "ivangermanov";
+  private gitHubCreator: string = "ivangermanov";
   private baseLink: string =
     "https://statuspageivan.blob.core.windows.net/statuspageivan";
   private showLoaderIssues: boolean = true;
@@ -50,18 +50,20 @@ export default class App extends Vue {
   setIssues(): void {
     this.showLoaderIssues = true;
     axios
-      .get("https://api.github.com/repos/ivangermanov/cytosmart_test/issues")
+      .get(
+        `https://api.github.com/repos/ivangermanov/cytosmart_test/issues?creator=${
+          this.gitHubCreator
+        }`
+      )
       .then((r: AxiosResponse) => {
         this.issues = [];
         for (let i = 0; i < r.data.length; i++) {
-          if ((r.data[i].user.login = this.userPosting)) {
-            const issue = r.data[i];
-            const title = issue["title"];
-            const body = issue["body"];
-            const createdAt = issue["created_at"];
-            const updatedAt = issue["updated_at"];
-            this.issues.push({ title, body, createdAt, updatedAt });
-          }
+          const issue = r.data[i];
+          const title = issue["title"];
+          const body = issue["body"];
+          const createdAt = issue["created_at"];
+          const updatedAt = issue["updated_at"];
+          this.issues.push({ title, body, createdAt, updatedAt });
         }
         this.showLoaderIssues = false;
       })
