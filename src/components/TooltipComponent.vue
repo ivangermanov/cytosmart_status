@@ -19,7 +19,7 @@
           </svg>
         </div>
         <div>
-          <p>{{tooltipHeader}}</p>
+          <p class="tooltip-header">{{tooltipHeader}}</p>
           <p class="text-sm">{{tooltipText}}</p>
         </div>
       </div>
@@ -37,6 +37,10 @@ export default class TooltipComponent extends Vue {
 }
 </script>
 <style lang="scss" scoped>
+.tooltip-header {
+  margin: 6px 0px;
+}
+
 .main-div {
   height: auto;
   min-height: 100px;

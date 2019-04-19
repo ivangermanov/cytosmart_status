@@ -28,7 +28,7 @@
                 Cloud
                 <question-mark
                   v-show="statuses.cloud.serviceMessage != null"
-                  :tooltipHeader="'Cloud Message'"
+                  :tooltipHeader="'Cloud message'"
                   :tooltipText="statuses.cloud.serviceMessage"
                 />
               </div>
@@ -46,7 +46,7 @@
                 Cell counter
                 <question-mark
                   v-show="statuses.cell_counter.serviceMessage != null"
-                  :tooltipHeader="'Cell counter Message'"
+                  :tooltipHeader="'Cell counter message'"
                   :tooltipText="statuses.cell_counter.serviceMessage"
                 />
               </div>
@@ -72,7 +72,7 @@
                 Omni
                 <question-mark
                   v-show="statuses.omni.serviceMessage != null"
-                  :tooltipHeader="'Omni Message'"
+                  :tooltipHeader="'Omni message'"
                   :tooltipText="statuses.omni.serviceMessage"
                 />
               </div>
@@ -95,7 +95,7 @@
                 Lux 2
                 <question-mark
                   v-show="statuses.lux_2.serviceMessage != null"
-                  :tooltipHeader="'Lux 2 Message'"
+                  :tooltipHeader="'Lux 2 message'"
                   :tooltipText="statuses.lux_2.serviceMessage"
                 />
               </div>

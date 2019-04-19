@@ -33,6 +33,8 @@ export default class App extends Vue {
     lux_2: Object as ServiceStatus
   };
   private userPosting: string = "ivangermanov";
+  private baseLink: string =
+    "https://statuspageivan.blob.core.windows.net/statuspageivan";
   private showLoaderIssues: boolean = true;
   private showLoaderHealth: boolean = true;
 
@@ -71,18 +73,10 @@ export default class App extends Vue {
     this.showLoaderHealth = true;
     axios
       .all([
-        axios.get(
-          "https://statuspageivan.blob.core.windows.net/status-jsons/cloud.json"
-        ),
-        axios.get(
-          "https://statuspageivan.blob.core.windows.net/status-jsons/cell_counter.json"
-        ),
-        axios.get(
-          "https://statuspageivan.blob.core.windows.net/status-jsons/omni.json"
-        ),
-        axios.get(
-          "https://statuspageivan.blob.core.windows.net/status-jsons/lux_2.json"
-        )
+        axios.get(`${this.baseLink}/cloud.json`),
+        axios.get(`${this.baseLink}/cell_counter.json`),
+        axios.get(`${this.baseLink}/omni.json`),
+        axios.get(`${this.baseLink}/lux_2.json`)
       ])
       .then(
         axios.spread(
