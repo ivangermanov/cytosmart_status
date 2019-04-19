@@ -171,8 +171,6 @@ export default class IssuesComponent extends Vue {
 
 .container {
   width: 100%;
-  padding-right: 10px;
-  padding-left: 10px;
   margin-right: auto;
   margin-left: auto;
 }
@@ -190,7 +188,7 @@ export default class IssuesComponent extends Vue {
 
 .flex-item {
   width: 46%;
-  margin-right: 2%;
+  margin-left: 2%;
 }
 
 .flex-item:nth-of-type(1) {
@@ -313,12 +311,15 @@ export default class IssuesComponent extends Vue {
 @media (max-width: 576px) {
   .container {
     max-width: 540px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   .flex-container {
     flex-wrap: wrap;
   }
   .flex-item {
     width: 100%;
+    padding-right: 2%;
   }
   .sticky {
     position: static;
