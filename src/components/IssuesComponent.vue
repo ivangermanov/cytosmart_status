@@ -273,7 +273,7 @@ export default class IssuesComponent extends Vue {
 
 @media (min-width: 1200px) {
   .container {
-    max-width: 1920px;
+    max-width: 1600px;
   }
   .table-item {
     font-size: 1.5rem;
