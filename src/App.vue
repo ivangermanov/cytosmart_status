@@ -34,7 +34,7 @@ export default class App extends Vue {
   };
   private gitHubCreator: string = "ivangermanov";
   private baseLink: string =
-    "https://statuspageivan.blob.core.windows.net/statuspageivan";
+    "https://statuspageivan.blob.core.windows.net/statusexternal";
   private showLoaderIssues: boolean = true;
   private showLoaderHealth: boolean = true;
 
