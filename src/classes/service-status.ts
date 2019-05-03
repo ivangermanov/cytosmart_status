@@ -1,3 +1,5 @@
+import { ServiceType } from "@/classes/enums/service-type";
+import { ServiceHealth } from "@/classes/enums/service-health";
 export default class ServiceStatus {
   public serviceType?: ServiceType;
   public serviceMessage?: string;
@@ -12,20 +14,4 @@ export default class ServiceStatus {
     this.serviceMessage = serviceMessage;
     this.serviceHealth = serviceHealth;
   }
-}
-
-export enum ServiceHealth {
-  NOT_WORKING = 0,
-  WORKING = 1,
-  UNDER_MAINTENANCE = 2,
-  WARNING = 3
-}
-
-export enum ServiceType {
-  CLOUD = 0,
-  CELL_COUNTER = 1,
-  // APIs = 2,
-  OMNI = 2,
-  // IMAGE_ANALYSIS = 4,
-  LUX_2 = 3
 }

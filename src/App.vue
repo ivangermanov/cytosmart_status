@@ -56,6 +56,7 @@ export default class App extends Vue {
         }`
       )
       .then((r: AxiosResponse) => {
+        console.log(r.data);
         this.issues = [];
         for (let i = 0; i < r.data.length; i++) {
           const issue = r.data[i];
@@ -63,7 +64,10 @@ export default class App extends Vue {
           const body = issue["body"];
           const createdAt = issue["created_at"];
           const updatedAt = issue["updated_at"];
-          this.issues.push({ title, body, createdAt, updatedAt });
+          const serviceTypes = issue["labels"].map(
+            (l: any) => l.name as string
+          );
+          this.issues.push({ title, body, createdAt, updatedAt, serviceTypes });
         }
         this.showLoaderIssues = false;
       })

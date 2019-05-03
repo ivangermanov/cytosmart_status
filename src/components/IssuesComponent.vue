@@ -7,11 +7,11 @@
         <div class="issue" v-for="(issue, i) in this.issues" :key="i">
           <div class="title">{{issue.title}}</div>
           <div class="date">
-            {{issue.createdAt | date}}
-            <label
+            <span>{{issue.createdAt | date}}</span>
+            <span
               class="updated"
               v-if="issue.createdAt != issue.updatedAt"
-            >, updated at {{issue.updatedAt | date}}</label>
+            >, updated at {{issue.updatedAt | date}}</span>
           </div>
           <vue-markdown class="body">{{issue.body}}</vue-markdown>
         </div>
@@ -141,7 +141,8 @@ import TickMark from "@/SVGs/TickMark.vue";
 import CrossMark from "@/SVGs/CrossMark.vue";
 import MaintenanceMark from "@/SVGs/MaintenanceMark.vue";
 import WarningMark from "@/SVGs/WarningMark.vue";
-import ServiceStatus, { ServiceHealth } from "@/classes/service-status";
+import ServiceStatus from "@/classes/service-status";
+import { ServiceHealth } from "@/classes/enums/service-health";
 
 @Component({
   components: {
