@@ -3,25 +3,35 @@
     <div class="header">
       <div>Status</div>
     </div>
-    <issues-component
-      :issues="issues"
-      :statuses="statuses"
-      :showLoaderIssues="showLoaderIssues"
-      :showLoaderHealth="showLoaderHealth"
-    ></issues-component>
+    <div class="container flex-container">
+      <div class="flex-item relative">
+        <h1>Issues</h1>
+        <loader-component :show="showLoaderIssues"></loader-component>
+        <issues-component :issues="issues" :showLoaderIssues="showLoaderIssues"></issues-component>
+      </div>
+      <div class="flex-item status relative sticky">
+        <h1>Services Health</h1>
+        <loader-component :show="showLoaderHealth"></loader-component>
+        <statuses-component :statuses="statuses" :showLoaderHealth="showLoaderHealth"></statuses-component>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import IssuesComponent from "./components/IssuesComponent.vue";
 import axios, { AxiosResponse } from "axios";
+import IssuesComponent from "@/components/IssuesComponent.vue";
+import StatusesComponent from "@/components/StatusesComponent.vue";
+import LoaderComponent from "@/components/LoaderComponent.vue";
 import Issue from "@/classes/issue";
 import ServiceStatus from "@/classes/service-status";
 
 @Component({
   components: {
-    IssuesComponent
+    IssuesComponent,
+    StatusesComponent,
+    LoaderComponent
   }
 })
 export default class App extends Vue {
@@ -151,5 +161,102 @@ body {
 
 :root {
   font-size: 16px;
+}
+
+.relative {
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.flex-container {
+  display: flex;
+  list-style: none;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  margin-top: 7%;
+  width: 100%;
+}
+
+.flex-item {
+  width: 46%;
+  margin-left: 2%;
+}
+
+.flex-item:nth-of-type(1) {
+}
+
+.sticky {
+  position: sticky;
+  top: 100px;
+  align-self: flex-start;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1600px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+  .table-item {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 877px) {
+  .container {
+    max-width: 960px;
+  }
+  .table-item {
+    font-size: 1.5rem;
+  }
+  .table-services {
+    height: 384px;
+    grid-template-columns: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    max-width: 540px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .flex-container {
+    flex-wrap: wrap;
+  }
+  .flex-item {
+    width: 100%;
+    padding-right: 2%;
+  }
+  .sticky {
+    position: static;
+  }
+  .flex-item:nth-of-type(1) {
+    order: 2;
+  }
+  .flex-item:nth-of-type(2) {
+    order: 1;
+  }
+  .table-services {
+    height: 384px;
+    grid-template-columns: auto;
+  }
 }
 </style>
