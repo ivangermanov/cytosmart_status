@@ -109,13 +109,13 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import LoaderComponent from "@/components/LoaderComponent.vue";
-import QuestionMark from "@/SVGs/QuestionMark.vue";
-import TickMark from "@/SVGs/TickMark.vue";
-import CrossMark from "@/SVGs/CrossMark.vue";
-import MaintenanceMark from "@/SVGs/MaintenanceMark.vue";
-import WarningMark from "@/SVGs/WarningMark.vue";
-import ServiceStatus from "@/classes/service-status";
-import { ServiceHealth } from "@/classes/enums/service-health";
+import QuestionMark from "@/components/SVGs/QuestionMark.vue";
+import TickMark from "@/components/SVGs/TickMark.vue";
+import CrossMark from "@/components/SVGs/CrossMark.vue";
+import MaintenanceMark from "@/components/SVGs/MaintenanceMark.vue";
+import WarningMark from "@/components/SVGs/WarningMark.vue";
+import ServiceStatus from "@/_shared/classes/service-status";
+import { ServiceHealth } from "@/_shared/enums/service-health";
 
 @Component({
   components: {

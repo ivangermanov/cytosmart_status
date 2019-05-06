@@ -1,5 +1,5 @@
-import { ServiceType } from "@/classes/enums/service-type";
-import { ServiceHealth } from "@/classes/enums/service-health";
+import { ServiceType } from "@/_shared/enums/service-type";
+import { ServiceHealth } from "@/_shared/enums/service-health";
 export default class ServiceStatus {
   public serviceType?: ServiceType;
   public serviceMessage?: string;

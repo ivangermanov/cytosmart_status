@@ -6,6 +6,7 @@
     <div class="container flex-container">
       <div class="flex-item relative">
         <h1>Issues</h1>
+        <multi-select-component></multi-select-component>
         <loader-component :show="showLoaderIssues"></loader-component>
         <issues-component :issues="issues" :showLoaderIssues="showLoaderIssues"></issues-component>
       </div>
@@ -21,16 +22,19 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
-import IssuesComponent from "@/components/IssuesComponent.vue";
-import StatusesComponent from "@/components/StatusesComponent.vue";
+import IssuesComponent from "@/components/issues/IssuesComponent.vue";
+import StatusesComponent from "@/components/statuses/StatusesComponent.vue";
+import MultiSelectComponent from "@/components/issues/MultiSelectComponent.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
-import Issue from "@/classes/issue";
-import ServiceStatus from "@/classes/service-status";
+import Issue from "@/_shared/classes/issue";
+import ServiceStatus from "@/_shared/classes/service-status";
+import { ServiceType } from "./_shared/enums/service-type";
 
 @Component({
   components: {
     IssuesComponent,
     StatusesComponent,
+    MultiSelectComponent,
     LoaderComponent
   }
 })
@@ -75,7 +79,7 @@ export default class App extends Vue {
           const createdAt = issue["created_at"];
           const updatedAt = issue["updated_at"];
           const serviceTypes = issue["labels"].map(
-            (l: any) => l.name as string
+            (l: any) => ServiceType[l.name.toUpperCase()]
           );
           this.issues.push({ title, body, createdAt, updatedAt, serviceTypes });
         }

@@ -1,4 +1,4 @@
-import { ServiceType } from "@/classes/enums/service-type";
+import { ServiceType } from "@/_shared/enums/service-type";
 export default class Issue {
   public title: string;
   public body: string;

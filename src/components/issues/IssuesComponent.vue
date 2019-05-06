@@ -13,10 +13,10 @@
         <span>
           <a
             class="serviceType"
-            :class="serviceType"
+            :class="ServiceType[serviceType].toLowerCase()"
             v-for="(serviceType, j) in issue.serviceTypes"
             :key="j"
-          >{{serviceType}}</a>
+          >{{serviceType | format-service-type}}</a>
         </span>
       </div>
       <vue-markdown class="body">{{issue.body}}</vue-markdown>
@@ -26,15 +26,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import StatusesComponent from "@/components/StatusesComponent.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import VueMarkdown from "vue-markdown";
-import Issue from "@/classes/issue";
-import { ServiceHealth } from "@/classes/enums/service-health";
+import { ServiceType } from "@/_shared/enums/service-type";
+import Issue from "@/_shared/classes/issue";
 
 @Component({
   components: {
-    StatusesComponent,
     LoaderComponent,
     VueMarkdown
   }
@@ -42,6 +40,8 @@ import { ServiceHealth } from "@/classes/enums/service-health";
 export default class IssuesComponent extends Vue {
   @Prop({ default: [] }) private issues!: Issue[];
   @Prop({ default: true }) private showLoaderIssues = true;
+
+  private ServiceType = ServiceType;
 }
 </script>
 
@@ -58,6 +58,7 @@ export default class IssuesComponent extends Vue {
   display: inline-block;
   text-decoration: none;
   box-sizing: border-box;
+  // text-transform: capitalize;
 }
 .cloud {
   color: #000000;

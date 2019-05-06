@@ -1,4 +1,4 @@
-export default function(d: string) {
+export default function(d: string): string {
   const options = {
     day: "numeric",
     month: "long",
