@@ -6,7 +6,6 @@
     <div class="container flex-container">
       <div class="flex-item relative">
         <h1>Issues</h1>
-        <multi-select-component></multi-select-component>
         <loader-component :show="showLoaderIssues"></loader-component>
         <issues-component :issues="issues" :showLoaderIssues="showLoaderIssues"></issues-component>
       </div>
@@ -24,7 +23,6 @@ import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
 import IssuesComponent from "@/components/issues/IssuesComponent.vue";
 import StatusesComponent from "@/components/statuses/StatusesComponent.vue";
-import MultiSelectComponent from "@/components/issues/MultiSelectComponent.vue";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import Issue from "@/_shared/classes/issue";
 import ServiceStatus from "@/_shared/classes/service-status";
@@ -34,7 +32,6 @@ import { ServiceType } from "./_shared/enums/service-type";
   components: {
     IssuesComponent,
     StatusesComponent,
-    MultiSelectComponent,
     LoaderComponent
   }
 })

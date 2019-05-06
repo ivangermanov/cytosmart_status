@@ -3,7 +3,7 @@
     Filter by service
     <multiselect
       :close-on-select="false"
-      :preserve-search="false"
+      :preserve-search="true"
       :preselect-first="false"
       :allow-empty="true"
       v-model="value"
@@ -12,12 +12,11 @@
       :options="options"
       :multiple="true"
     ></multiselect>
-    <pre class="language-json"><code>{{ value }}</code></pre>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Watch, Emit, Vue } from "vue-property-decorator";
 import Multiselect from "vue-multiselect";
 import { ServiceType } from "@/_shared/enums/service-type";
 import FormatServiceType from "@/_shared/filters/filter-format-service-type";
@@ -44,8 +43,19 @@ export default class MultiSelectComponent extends Vue {
     }
   ];
 
-  private value: string = "";
+  private value: Array<any> = [];
 
+  // watch and emit
+  @Watch("value")
+  emitChangedValue(value: Array<any>): void {
+    const selectedServicesTypes: Array<ServiceType> = value.map(s => s.type);
+    this.emitSelectedServices(selectedServicesTypes);
+  }
+
+  @Emit("update-selected-services")
+  emitSelectedServices(value: ServiceType[]) {}
+
+  // method(s)
   formatServiceType(serviceType: ServiceType): string {
     return this.$parent.$options.filters!["format-service-type"](serviceType);
   }

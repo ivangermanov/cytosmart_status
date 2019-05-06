@@ -1,25 +1,31 @@
 <template>
-  <div v-if="!showLoaderIssues">
-    <div class="issue" v-for="(issue, i) in this.issues" :key="i">
-      <div class="title">{{issue.title}}</div>
-      <div>
-        <span class="date">
-          <span>{{issue.createdAt | date}}</span>
-          <span
-            class="updated"
-            v-if="issue.createdAt != issue.updatedAt"
-          >, updated at {{issue.updatedAt | date}}</span>
-        </span>
-        <span>
-          <a
-            class="serviceType"
-            :class="ServiceType[serviceType].toLowerCase()"
-            v-for="(serviceType, j) in issue.serviceTypes"
-            :key="j"
-          >{{serviceType | format-service-type}}</a>
-        </span>
+  <div v-show="!showLoaderIssues">
+    <multi-select-component @update-selected-services="updateSelectedServices"></multi-select-component>
+    <div v-if="selectedIssues.length != 0">
+      <div class="issue" v-for="(issue, i) in selectedIssues" :key="i">
+        <div class="title">{{issue.title}}</div>
+        <div>
+          <span class="date">
+            <span>{{issue.createdAt | date}}</span>
+            <span
+              class="updated"
+              v-if="issue.createdAt != issue.updatedAt"
+            >, updated at {{issue.updatedAt | date}}</span>
+          </span>
+          <span>
+            <a
+              class="serviceType"
+              :class="ServiceType[serviceType].toLowerCase()"
+              v-for="(serviceType, j) in issue.serviceTypes"
+              :key="j"
+            >{{serviceType | format-service-type}}</a>
+          </span>
+        </div>
+        <vue-markdown class="body">{{issue.body}}</vue-markdown>
       </div>
-      <vue-markdown class="body">{{issue.body}}</vue-markdown>
+    </div>
+    <div v-else>
+      <h2>No issues to display.</h2>
     </div>
   </div>
 </template>
@@ -28,20 +34,41 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import LoaderComponent from "@/components/LoaderComponent.vue";
 import VueMarkdown from "vue-markdown";
+import MultiSelectComponent from "@/components/issues/MultiSelectComponent.vue";
 import { ServiceType } from "@/_shared/enums/service-type";
 import Issue from "@/_shared/classes/issue";
 
 @Component({
   components: {
     LoaderComponent,
-    VueMarkdown
+    VueMarkdown,
+    MultiSelectComponent
   }
 })
 export default class IssuesComponent extends Vue {
   @Prop({ default: [] }) private issues!: Issue[];
   @Prop({ default: true }) private showLoaderIssues = true;
-
+  private selectedServices: ServiceType[] = [];
   private ServiceType = ServiceType;
+
+  // computed
+  get selectedIssues() {
+    if (this.selectedServices.length == 0) {
+      return this.issues;
+    } else if (this.selectedServices.length == 4) {
+      return this.issues.filter(i => i.serviceTypes.length === 0);
+    } else {
+      return this.issues.filter(i =>
+        this.selectedServices.every(selectedService =>
+          i.serviceTypes.includes(selectedService)
+        )
+      );
+    }
+  }
+  // method(s)
+  updateSelectedServices(newSelectedServices: ServiceType[]): void {
+    this.selectedServices = newSelectedServices;
+  }
 }
 </script>
 
